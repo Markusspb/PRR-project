@@ -1,0 +1,13 @@
+"0","pingu=penguins"
+"0","#print(count(pingu))"
+"0",""
+"0","#print(ncol(pingu))"
+"0","#print(colnames(pingu))"
+"0","#print(unique(pingu))"
+"0","#head(pingu)"
+"0","#glimpse(pingu)"
+"0","#str(pingu)"
+"0","#unique(pingu$species)"
+"0","levels(pingu)"
+"1","NULL
+"

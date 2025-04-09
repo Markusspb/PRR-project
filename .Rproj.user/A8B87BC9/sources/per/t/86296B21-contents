@@ -1,0 +1,177 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+library(palmerpenguins)
+data(package = 'palmerpenguins')
+library(tidyverse)
+library(scales)
+#library(nycflights13)
+
+```
+```{r}
+print(class(c(TRUE))) # logical
+print(class(c(TRUE, 1L))); typeof(c(TRUE, 1L))
+print(class(c(TRUE, 1L, 2)))
+print(typeof(c(TRUE, 1L, 2))) # logical -> integer -> double
+class(c(TRUE, 1L, 2, "3")); typeof(c(TRUE, 1L, 2, "3"))
+```
+```{r}
+pingu=penguins
+#print(count(pingu))
+
+#print(ncol(pingu))
+#print(colnames(pingu))
+#print(unique(pingu))
+#head(pingu)
+#glimpse(pingu)
+#str(pingu)
+#unique(pingu$species)
+levels(pingu)
+```
+
+
+```{r}
+ggplot(data = penguins, mapping= aes(x= flipper_length_mm, y=body_mass_g, 
+      color = species))+
+    geom_point(mapping = aes(color = species, shape = species,na.rm=TRUE))+ 
+    geom_smooth(method = "lm", na.rm=TRUE)+ 
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Species", shape = "Species", caption = "Data come from the palmerpenguins package."
+  ) #+
+  #scale_color_colorblind()
+
+```
+```{r}
+#view(penguins)
+#filter(penguins,islands=Torgersen)
+pingu=penguins
+Pengu=penguins$body_mass_g
+print(mean(Pengu, na.rm=TRUE))
+
+ggplot(data = pingu, aes(x=Pengu)) + geom_vline(xintercept = mean(Pengu, na.rm=TRUE))+
+  geom_vline(xintercept = mean(Pengu, na.rm=TRUE)-sd(Pengu, na.rm = TRUE))+
+  geom_vline(xintercept = mean(Pengu, na.rm=TRUE)+sd(Pengu, na.rm = TRUE))+
+stat_function(fun = dnorm, n = 101, args = list(mean = mean(Pengu, na.rm=TRUE), sd =sd(Pengu, na.rm = TRUE)))  +labs(
+    title = "Body mass Normaldistribution",
+    x = "Body mass (g)" , y = "Penguins",
+    color = "bill_depth_mm", caption = "Data come from the palmerpenguins package."
+  ) +
+  
+  scale_y_continuous(breaks = NULL)
+
+
+```
+
+```{r}
+#view(penguins)
+
+pingu=filter(penguins,island=="Torgersen")
+Pengu=pingu$body_mass_g
+print(mean(Pengu, na.rm=TRUE))
+
+ggplot(data = pingu, aes(x=Pengu)) +
+  geom_vline(xintercept = mean(Pengu, na.rm=TRUE))+
+  #geom_text(aes(x=mean(Pengu, na.rm=TRUE), label="\nμ", y=20), colour="blue", text=element_text(size=11))+
+  geom_vline(xintercept = mean(Pengu, na.rm=TRUE)-sd(Pengu, na.rm = TRUE))+
+   #geom_text(aes(x=mean(Pengu, na.rm=TRUE)-sd(Pengu, na.rm = TRUE), label="\n-σ", y=20), colour="blue", text=element_text(size=11))+
+  geom_vline(xintercept = mean(Pengu, na.rm=TRUE)+sd(Pengu, na.rm = TRUE))+
+  #geom_text(aes(x=mean(Pengu, na.rm=TRUE)+sd(Pengu, na.rm = TRUE), label="\nσ", y=20), colour="blue", text=element_text(size=11))+
+stat_function(fun = dnorm, n = 101, args = list(mean = mean(Pengu, na.rm=TRUE), sd =sd(Pengu, na.rm = TRUE)))  +
+               labs(
+    title = "Body mass Normaldistribution",
+    x = "Body mass (g)" , y = "Penguins",
+     caption = "Data come from the palmerpenguins package."
+  ) +
+  scale_y_continuous(breaks = NULL)
+
+
+```
+
+```{r}
+nrow(penguins)
+help(penguins)
+ggplot(data = penguins, mapping= aes(x= bill_depth_mm, y=bill_length_mm, 
+      color = species))+
+    geom_point(mapping = aes(color = species, shape = species))
+
+ggplot(data = penguins, mapping= aes(x= bill_depth_mm, color=species))+
+    geom_density()
+```
+```{r}
+ggplot(data = penguins, mapping= aes(x=body_mass_g , y= flipper_length_mm, color = bill_depth_mm 
+      ))+
+    geom_point(mapping = aes(color = bill_depth_mm ,na.rm=TRUE))+ 
+    geom_smooth(method = NULL, na.rm=TRUE)+ 
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "bill_depth_mm", caption = "Data come from the palmerpenguins package."
+  )
+```
+Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions.
+```{r}
+
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)
+) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+
+
+```
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point() +
+  geom_smooth()
+
+ggplot() +
+  geom_point(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  ) +
+  geom_smooth(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  )
+```
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+```
+A variable is categorical if it can only take one of a small set of values.
+```{r}
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+```
+In bar plots of categorical variables with non-ordered levels, like the penguin species above, it’s often preferable to reorder the bars based on their frequencies. 
+```{r}
+ggplot(penguins, aes(x = fct_infreq(species))) +
+  geom_bar()
+```
+
+Kategoriale Variablen 
+Nominal und Ordinal 
+Nominal: Labesl ohne Reihenfolge, wenn Merkmal nur zwei ausprägungen: dichotom 
+Ordinal angordnungen der Art „größer“/„kleiner“, „mehr“/„weniger“, „stärker“/„schwächer“ zwischen je zwei unterschiedlichen Merkmalswerten
+Numerische Variblen
+Klassen in R Funktion class(), 
+factors (int, num , double): Freitext  der in Kategoriale Variablen 
+
+
+

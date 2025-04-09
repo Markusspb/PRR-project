@@ -1,0 +1,15 @@
+rescale01-> function(x){
+  ggplot(data = penguins, mapping= aes(x= flipper_length_mm, y=body_mass_g, 
+                                       color = species))+
+    geom_point(mapping = aes(color = species, shape = species,na.rm=TRUE))+ 
+    geom_smooth(method = "lm", na.rm=TRUE)+ 
+    labs(
+      title = "Body mass and flipper length",
+      subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+      x = "Flipper length (mm)", y = "Body mass (g)",
+      color = "Species", shape = "Species", caption = "Data come from the palmerpenguins package."
+    )
+  
+  
+  
+}
