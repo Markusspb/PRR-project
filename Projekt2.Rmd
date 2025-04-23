@@ -1,0 +1,131 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+library(shinydashboard)
+library(shiny)
+
+
+
+
+#Maybe adding a Filter function to the Dashboard.
+
+
+ui <-dashboardPage(
+  dashboardHeader(title = "SeoulBikedata"),
+  dashboardSidebar(
+    menuItem("Plots", tabName = "dashboard", icon = icon("chart-bar")),
+    selectInput(
+      inputId = "season_select",
+      label = "Wähle eine Jahreszeit:",
+      choices = c("Alle","Spring", "Summer", "Autumn", "Winter"),
+      selected = "Alle"
+    )),
+  dashboardBody(
+    
+    tabItems(
+      # First tab content
+      tabItem(tabName = "dashboard",
+        fluidRow(
+          box(plotOutput("plot1", height = 250)),
+           box(plotOutput("plot2", height = 250)),
+           box(plotOutput("plot3", height = 250)),
+           box(plotOutput("plot4", height = 250)),
+           box(plotOutput("plot5", height = 250)),
+           box(plotOutput("plot6", height = 250)),
+           box(plotOutput("plot7", height = 250)),
+        )
+      ),
+      # Second tab content
+      tabItem(tabName = "widgets",
+        h2("Widgets tab content")
+      )
+    )
+))
+server <- function(input, output) {
+
+  # Zuerst das reaktive Objekt definieren!
+  gefilterte_daten <- reactive({
+    if (input$season_select == "Alle") {
+      bydate  # ungefilterte Daten
+    } else {
+      bydate %>% filter(Seasons == input$season_select)
+    }
+  })
+
+  # Jetzt funktionieren die renderPlot-Ausgaben
+  output$plot1 <- renderPlot({
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_temp)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  })
+
+  output$plot2 <- renderPlot({
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  })
+
+  output$plot3 <- renderPlot({
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  })
+
+  output$plot4 <- renderPlot({
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  })
+
+  output$plot5 <- renderPlot({
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  })
+
+  output$plot6 <- renderPlot({
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  })
+
+  output$plot7 <- renderPlot({
+    bydate <- gefilterte_daten()
+    scale_factor <- max(bydate$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
+    ggplot(bydate, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
+      geom_bar(stat = "identity") +
+      geom_line(aes(y = mean_temp * scale_factor), colour = "red", size = 1) +
+      scale_y_continuous(
+        name = "Rented Bike Count",
+        sec.axis = sec_axis(~ . / scale_factor, name = "Average Temperature (°C)", breaks = seq(0, 50, 10))
+      ) +
+      labs(
+        title = "Tägliche Ausleihzahlen vs. Durchschnittstemperatur",
+        x = "Datum"
+      ) +
+      theme_minimal()
+  })
+}
+
+shinyApp(ui, server)
+```
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
