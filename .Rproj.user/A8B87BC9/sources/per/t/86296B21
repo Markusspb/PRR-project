@@ -3,7 +3,7 @@
     "path": "C:/FHNW/eda/penguins2.Rmd",
     "project_path": null,
     "type": "r_markdown",
-    "hash": "2810170129",
+    "hash": "837546476",
     "contents": "",
     "dirty": false,
     "created": 1740047738897.0,
@@ -18,11 +18,11 @@
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1741076508,
+    "lastKnownWriteTime": 1741861814,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1741076508431,
+    "last_content_update": 1745429320830,
     "read_only": false,
     "read_only_alternatives": []
 }

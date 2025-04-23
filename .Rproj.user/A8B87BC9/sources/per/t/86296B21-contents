@@ -54,6 +54,7 @@ ggplot(data = penguins, mapping= aes(x= flipper_length_mm, y=body_mass_g,
 ```{r}
 #view(penguins)
 #filter(penguins,islands=Torgersen)
+
 pingu=penguins
 Pengu=penguins$body_mass_g
 print(mean(Pengu, na.rm=TRUE))
@@ -71,6 +72,31 @@ stat_function(fun = dnorm, n = 101, args = list(mean = mean(Pengu, na.rm=TRUE), 
 
 
 ```
+
+```{r}
+#bill_depth_mm, flipper_length_mm
+#print(typeof(penguins$bill_length_mm))
+species=unique(penguins$species)
+for (species in species){
+pen=filter(penguins,penguins$species==species)
+bill_length_mm=pen$bill_length_mm
+bill_depth_mm=pen$bill_depth_mm
+flipper_length_mm=pen$flipper_length_mm
+Pengu=pen$body_mass_g
+mean_len=mean(bill_length_mm,na.rm = TRUE)
+mean_mass=mean(Pengu,na.rm = TRUE)
+mean_dep=mean(bill_depth_mm,na.rm = TRUE)
+mean_fl=mean(flipper_length_mm,na.rm = TRUE)
+sd_len=sd(bill_length_mm,na.rm = TRUE)
+sd_mass=sd(Pengu,na.rm = TRUE)
+sd_dep=sd(bill_depth_mm,na.rm = TRUE)
+sd_fl=sd(flipper_length_mm,na.rm = TRUE)
+print(c(species, mean_len,mean_mass, mean_dep, mean_fl,sd_len,sd_mass,sd_dep,sd_fl))
+print("\n")
+      }
+
+```
+
 
 ```{r}
 #view(penguins)
@@ -100,12 +126,13 @@ stat_function(fun = dnorm, n = 101, args = list(mean = mean(Pengu, na.rm=TRUE), 
 ```{r}
 nrow(penguins)
 help(penguins)
-ggplot(data = penguins, mapping= aes(x= bill_depth_mm, y=bill_length_mm, 
-      color = species))+
-    geom_point(mapping = aes(color = species, shape = species))
-
 ggplot(data = penguins, mapping= aes(x= bill_depth_mm, color=species))+
-    geom_density()
+    geom_density()+labs(title= "Penguins bill depth distribution", y="density")
+#ggplot(data = penguins, mapping= aes(x= bill_depth_mm, y=bill_length_mm, 
+ #     color = species))+
+#    geom_point(mapping = aes(color = species, shape = species))
+
+
 ```
 ```{r}
 ggplot(data = penguins, mapping= aes(x=body_mass_g , y= flipper_length_mm, color = bill_depth_mm 
