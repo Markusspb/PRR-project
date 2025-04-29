@@ -29,14 +29,22 @@ Correlations<-data.frame(
   Variable = c("Hour","Temperature", "Humidity", "Wind", "Visibility", "Dewpoint", "Solar Radiation"),
   Correlation = c(cor_Hour,cor_temp, cor_Humidity, cor_Wind, cor_Visibility, cor_Dewpoint, cor_Solar)
 )
+print(Correlations)
+```
+Die beiden stärksten Korrelationen im Datensatz sind Hour(Uhrzeit) mit 0.41 und Temperatur mit 0.53 was in beiden fällen auf eine mittelstarke Korrelation hindeutet. Es lässt sich dadurch Annehmen, das z.B. an Tagen an denen eine höhere Temparatur herrscht mit mehr Kunden zu rechnen ist.
 
+```{r}
 bydate<- data %>% group_by(Dates)%>% summarise(Seasons = first(Seasons),Summe_Rented_Bike_Count = sum(Rented.Bike.Count), mean_temp=mean(Temperature..C.),cor_temp=cor(Rented.Bike.Count,Temperature..C.), mean_Humidity=mean(Humidity...,na.rm = TRUE),cor_Humidity=cor(Rented.Bike.Count,Humidity...) ,mean_Wind=mean(Wind.speed..m.s.),cor_Wind=cor(Rented.Bike.Count,Wind.speed..m.s.) , 
 Visibility_mean=mean(Visibility..10m.,na.rm =  TRUE),cor_Visibility=cor(Rented.Bike.Count,Visibility..10m.),
 Dew.point_mean=mean(Dew.point.temperature..C.),cor_Dewpoint=cor(Rented.Bike.Count, Dew.point.temperature..C.),Solar.Radiation_mean=mean(Solar.Radiation..MJ.m2.), cor_Solar=cor(Rented.Bike.Count,Solar.Radiation..MJ.m2.))
+
 ```
 
 
 ```{r}
+#ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=hour))+
+         #geom_point()+
+        #geom_smooth(method=lm,formula=y~x, colour="red")
 ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp))+
          geom_point()+
         geom_smooth(method=lm,formula=y~x, colour="red")
@@ -88,7 +96,9 @@ cor_Hour<- cor(Rented.Bike.Count, Hour))
 #  Variable = c("Hour","Temperature", "Humidity", "Wind", "Visibility", "Dewpoint", "Solar Radiation"),
 #  Correlation = c(cor_Hour,cor_temp, cor_Humidity, cor_Wind, cor_Visibility, cor_Dewpoint, cor_Solar)
 #)
+print(Correlations_byseasons)
 ```
+
 
 ```{r}
 library(shinydashboard)
