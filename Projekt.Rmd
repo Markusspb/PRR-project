@@ -13,6 +13,7 @@ summary(data)
 #names(data) <- gsub("°", "_deg", names(data))
 #print(data)
 data$Date <- as.Date(data$Date, format = "%d/%m/%Y")
+data$Seasons<- factor(data$Seasons,levels = c("Summer", "Winter", "Autumn", "Spring"))
 data<-data %>% 
   rename(    Dates = Date  )
 #data %>% mutate(cor_temp=cor(Rented.Bike.Count,Temperature..C.), cor_Humidity=cor(Rented.Bike.Count,Humidity...),cor_Wind=cor(Rented.Bike.Count,Wind.speed..m.s.),cor_Visibility=cor(Rented.Bike.Count,Visibility..10m.),  cor_Dewpoint=cor(Rented.Bike.Count, Dew.point.temperature..C.),cor_Solar=cor(Rented.Bike.Count,Solar.Radiation..MJ.m2.))
@@ -64,26 +65,72 @@ Dew.point_mean=mean(Dew.point.temperature..C.),cor_Dewpoint=cor(Rented.Bike.Coun
 #ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=hour))+
          #geom_point()+
         #geom_smooth(method=lm,formula=y~x, colour="red")
-ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp))+
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp, colour=Seasons))+
+        geom_point()+
+        geom_smooth(method=lm,formula=y~x, colour="red")+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
+  labs(
+    x = "Täglich gemietete Fahrräder (Summe)",
+    y = "Tagesdurchschnittstemperatur (°C)",
+    colour = "Jahreszeit",
+    title = "Zusammenhang zwischen Tages-Temperatur und Fahrradnutzung",
+    subtitle = "Jeder Punkt entspricht einem Kalendertag mit aufsummierten Werten"
+  )
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp, colour=Seasons))+
+        geom_point()+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
+        geom_smooth(method=lm,formula=y~x)
+
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp, colour=Seasons))+
+        geom_point()+
+        geom_smooth(method=lm,formula=y~x, colour="red")+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
+        geom_smooth(method=lm,formula=y~x)
+
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_Humidity,colour=Seasons))+#Humidity
          geom_point()+
         geom_smooth(method=lm,formula=y~x, colour="red")
-ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_Humidity))+
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_Humidity,colour=Seasons))+#Humidity
          geom_point()+
-        geom_smooth(method=lm,formula=y~x, colour="red")
-ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_Wind))+
+        geom_smooth(method=lm,formula=y~x)+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_Wind,colour=Seasons))+
          geom_point()+
-        geom_smooth(method=lm,formula=y~x, colour="red")
-ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Visibility_mean))+
+        geom_smooth(method=lm,formula=y~x, colour="red")+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_Wind,colour=Seasons))+
          geom_point()+
-        geom_smooth(method=lm,formula=y~x, colour="red")
-ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Dew.point_mean))+
+        geom_smooth(method=lm,formula=y~x)+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Visibility_mean,colour=Seasons))+
          geom_point()+
-        geom_smooth(method=lm,formula=y~x, colour="red")
-ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Solar.Radiation_mean))+
+        geom_smooth(method=lm,formula=y~x, colour="red")+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Visibility_mean,colour=Seasons))+
          geom_point()+
-        geom_smooth(method=lm,formula=y~x, colour="red")
+        geom_smooth(method=lm,formula=y~x)+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Dew.point_mean,colour=Seasons))+
+         geom_point()+
+        geom_smooth(method=lm,formula=y~x, colour="red")+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Dew.point_mean,colour=Seasons))+
+         geom_point()+
+        geom_smooth(method=lm,formula=y~x,)+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Solar.Radiation_mean,colour=Seasons))+
+         geom_point()+
+        geom_smooth(method=lm,formula=y~x, colour="red")+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=Solar.Radiation_mean,colour=Seasons))+
+         geom_point()+
+        geom_smooth(method=lm,formula=y~x)+
+  scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
 scale_factor <- max(bydate$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
-ggplot(bydate, mapping= aes(x=Dates, y=Summe_Rented_Bike_Count))+
+
+ggplot(bydate, mapping= aes(x=Dates, y=Summe_Rented_Bike_Count, colour=Seasons))+
          geom_bar(stat = "identity")+
   geom_line(aes(y = mean_temp * scale_factor), colour = "red", size = 1) +
 
@@ -103,6 +150,9 @@ ggplot(bydate, mapping= aes(x=Dates, y=Summe_Rented_Bike_Count))+
 
 
 ```{r}
+ byhour<- data %>% group_by(Hour)%>%summarise(Seasons = first(Seasons),Summe_Rented_Bike_Count = sum(Rented.Bike.Count), mean_temp=mean(Temperature..C.),cor_temp=cor(Rented.Bike.Count,Temperature..C.), mean_Humidity=mean(Humidity...,na.rm = TRUE),cor_Humidity=cor(Rented.Bike.Count,Humidity...) ,mean_Wind=mean(Wind.speed..m.s.),cor_Wind=cor(Rented.Bike.Count,Wind.speed..m.s.) , 
+Visibility_mean=mean(Visibility..10m.,na.rm =  TRUE),cor_Visibility=cor(Rented.Bike.Count,Visibility..10m.),
+Dew.point_mean=mean(Dew.point.temperature..C.),cor_Dewpoint=cor(Rented.Bike.Count, Dew.point.temperature..C.),Solar.Radiation_mean=mean(Solar.Radiation..MJ.m2.), cor_Solar=cor(Rented.Bike.Count,Solar.Radiation..MJ.m2.))
 summary(byhour)
 ggplot(byhour, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp))+
          geom_point()+
@@ -126,29 +176,43 @@ ggplot(byhour, mapping= aes(x=Summe_Rented_Bike_Count, y=Solar.Radiation_mean))+
 
 
 ```
-
-
 ```{r}
+# next step normalization of multiple variables; done and ordered with chekboxes
+#bydate
 library(shinydashboard)
 library(shiny)
 
 ui <-dashboardPage(
   dashboardHeader(title = "SeoulBikedata"),
   dashboardSidebar(
-    menuItem("Plots", tabName = "dashboard", icon = icon("chart-bar")),
-    selectInput(
-      inputId = "season_select",
-      label = "Wähle eine Jahreszeit:",
-      choices = c("Alle","Spring", "Summer", "Autumn", "Winter"),
-      selected = "Alle"
-    )),
+  menuItem("Plots", tabName = "dashboard", icon = icon("chart-bar")),
+  menuItem("normal_Plots", tabName = "dashboard2", icon = icon("chart-bar")),
+  selectInput(
+    inputId = "season_select",
+    label = "Wähle eine Jahreszeit:",
+    choices = c("Alle","Spring", "Summer", "Autumn", "Winter"),
+    selected = "Alle"
+  ),
+  selectInput(
+    inputId = "regressionlines",
+    label = "Wähle Regression:",
+    choices = c("Alle","Einzelne Jahreszeiten"),
+    selected = "Alle"
+  ),
+  radioButtons("dist", "Distribution type:",
+               c("Temperature" = "Temp",
+                 "Humidity-" = "Hum",
+                 "Wind" = "Wind",
+                 "Dewpoint" = "Dew",
+                 "Solar Radiation" = "Sol"))
+),
   dashboardBody(
     
     tabItems(
       # First tab content
       tabItem(tabName = "dashboard",
         fluidRow(
-          box(plotOutput("plot1", height = 250)),
+          box(plotOutput("plot1", height = 250, width = 500)),
            box(plotOutput("plot2", height = 250)),
            box(plotOutput("plot3", height = 250)),
            box(plotOutput("plot4", height = 250)),
@@ -158,8 +222,10 @@ ui <-dashboardPage(
         )
       ),
       # Second tab content
-      tabItem(tabName = "widgets",
-        h2("Widgets tab content")
+      tabItem(tabName = "dashboard2",
+        fluidRow(
+          box(plotOutput("plota", height = 250, width = 500))
+        )
       )
     )
 ))
@@ -168,75 +234,348 @@ server <- function(input, output) {
   # Zuerst das reaktive Objekt definieren!
   gefilterte_daten <- reactive({
     if (input$season_select == "Alle") {
-      byhour  # ungefilterte Daten
+      bydate  # ungefilterte Daten
     } else {
-      byhour %>% filter(Seasons == input$season_select)
+      bydate %>% filter(Seasons == input$season_select)
     }
   })
 
   # Jetzt funktionieren die renderPlot-Ausgaben
   output$plot1 <- renderPlot({
-    byhour <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_temp)) +
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_temp,colour=Seasons)) +
       geom_point() +
-      geom_smooth(method = lm, formula = y ~ x, colour = "red")
-  })
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp, colour=Seasons))+
+        geom_point()+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
+        geom_smooth(method=lm,formula=y~x)
+  }})
 
   output$plot2 <- renderPlot({
-    byhour <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity)) +
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity,colour=Seasons)) +
       geom_point() +
-      geom_smooth(method = lm, formula = y ~ x, colour = "red")
-  })
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+    }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+  }
+    
+    })
 
   output$plot3 <- renderPlot({
-    byhour <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind)) +
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind, colour=Seasons)) +
       geom_point() +
-      geom_smooth(method = lm, formula = y ~ x, colour = "red")
-  })
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+  }
+  else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
 
   output$plot4 <- renderPlot({
-    byhour <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean)) +
+     if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
-  })
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
 
   output$plot5 <- renderPlot({
-    byhour <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean)) +
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
-  })
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
 
   output$plot6 <- renderPlot({
-    byhour <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean)) +
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
-  })
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
+
 
   output$plot7 <- renderPlot({
-    byhour <- gefilterte_daten()
+    bydate <- gefilterte_daten()
     scale_factor <- max(bydate$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
     ggplot(bydate, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
-      geom_bar(stat = "identity") +
+      geom_bar(stat = "identity", aes(colour = Seasons)) +
       geom_line(aes(y = mean_temp * scale_factor), colour = "red", size = 1) +
       scale_y_continuous(
         name = "Rented Bike Count",
         sec.axis = sec_axis(~ . / scale_factor, name = "Average Temperature (°C)", breaks = seq(0, 50, 10))
       ) +
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
       labs(
         title = "Tägliche Ausleihzahlen vs. Durchschnittstemperatur",
         x = "Datum"
       ) +
       theme_minimal()
   })
-}
+  
+  output$plota <- renderPlot({
+    bydate <- gefilterte_daten()
+    process <- preProcess(as.data.frame(bydate), method=c("range"))
+    norm_scale <- predict(process, as.data.frame(bydate))
+    
+    ggplot(norm_scale, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
+      geom_bar(stat = "identity", colour=bydate$Seasons) +
+      {if (input$dist=="Temp")geom_line(aes(y = mean_temp ), colour = "red", size = 1)}+
+      {if (input$dist=="Hum")geom_line(aes(y = mean_Humidity ), colour = "blue", size = 1)}+
+      {if (input$dist=="Wind")geom_line(aes(y = mean_Wind ), colour = "green", size = 1)}+
+      {if (input$dist=="Sol")geom_line(aes(y = Solar.Radiation_mean ), colour = "yellow", size = 1)}+
+      {if (input$dist=="Dew")geom_line(aes(y = Dew.point_mean), colour = "cyan", size = 1)}+
+  theme_minimal()
+  })
+  }
 
 shinyApp(ui, server)
 ```
+```{r}
+# now lets try checkboxes
+#bydate
+library(shinydashboard)
+library(shiny)
+
+ui <-dashboardPage(
+  dashboardHeader(title = "SeoulBikedata"),
+  dashboardSidebar(
+  menuItem("Plots", tabName = "dashboard", icon = icon("chart-bar")),
+  menuItem("normal_Plots", tabName = "dashboard2", icon = icon("chart-bar")),
+  selectInput(
+    inputId = "season_select",
+    label = "Wähle eine Jahreszeit:",
+    choices = c("Alle","Spring", "Summer", "Autumn", "Winter"),
+    selected = "Alle"
+  ),
+  selectInput(
+    inputId = "regressionlines",
+    label = "Wähle Regression:",
+    choices = c("Alle","Einzelne Jahreszeiten"),
+    selected = "Alle"
+  ),
+  checkboxGroupInput("dist", "Distribution type:",
+               c("Temperature" = "Temp",
+                 "Humidity-" = "Hum",
+                 "Wind" = "Wind",
+                 "Dewpoint" = "Dew",
+                 "Solar Radiation" = "Sol"))
+),
+  dashboardBody(
+    
+    tabItems(
+      # First tab content
+      tabItem(tabName = "dashboard",
+        fluidRow(
+          box(plotOutput("plot1", height = 250, width = 500)),
+           box(plotOutput("plot2", height = 250)),
+           box(plotOutput("plot3", height = 250)),
+           box(plotOutput("plot4", height = 250)),
+           box(plotOutput("plot5", height = 250)),
+           box(plotOutput("plot6", height = 250)),
+           box(plotOutput("plot7", height = 250)),
+        )
+      ),
+      # Second tab content
+      tabItem(tabName = "dashboard2",
+        fluidRow(
+          box(plotOutput("plota", height = 250, width = 700))
+        )
+      )
+    )
+))
+server <- function(input, output) {
+
+  # Zuerst das reaktive Objekt definieren!
+  gefilterte_daten <- reactive({
+    if (input$season_select == "Alle") {
+      bydate  # ungefilterte Daten
+    } else {
+      bydate %>% filter(Seasons == input$season_select)
+    }
+  })
+
+  # Jetzt funktionieren die renderPlot-Ausgaben
+  output$plot1 <- renderPlot({
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_temp,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, mapping= aes(x=Summe_Rented_Bike_Count, y=mean_temp, colour=Seasons))+
+        geom_point()+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
+        geom_smooth(method=lm,formula=y~x)
+  }})
+
+  output$plot2 <- renderPlot({
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+    }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+  }
+    
+    })
+
+  output$plot3 <- renderPlot({
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))
+  }
+  else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
+
+  output$plot4 <- renderPlot({
+     if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
+
+  output$plot5 <- renderPlot({
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
+
+  output$plot6 <- renderPlot({
+    if (input$regressionlines == "Alle"){
+    bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean,colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+  }else if(input$regressionlines == "Einzelne Jahreszeiten"){
+      bydate <- gefilterte_daten()
+    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean, colour=Seasons)) +
+      geom_point() +
+      geom_smooth(method = lm, formula = y ~ x)+
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))}
+    
+    })
+
+
+  output$plot7 <- renderPlot({
+    bydate <- gefilterte_daten()
+    scale_factor <- max(bydate$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
+    ggplot(bydate, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
+      geom_bar(stat = "identity", aes(colour = Seasons)) +
+      geom_line(aes(y = mean_temp * scale_factor), colour = "red", size = 1) +
+      scale_y_continuous(
+        name = "Rented Bike Count",
+        sec.axis = sec_axis(~ . / scale_factor, name = "Average Temperature (°C)", breaks = seq(0, 50, 10))
+      ) +
+      scale_colour_manual(values = c("Winter" = "blue", "Spring" = "green", "Summer" = "orange", "Autumn" = "brown"))+
+      labs(
+        title = "Tägliche Ausleihzahlen vs. Durchschnittstemperatur",
+        x = "Datum"
+      ) +
+      theme_minimal()
+  })
+  
+  output$plota <- renderPlot({
+    bydate <- gefilterte_daten()
+    process <- preProcess(as.data.frame(bydate), method=c("range"))
+    norm_scale <- predict(process, as.data.frame(bydate))
+    
+    ggplot(norm_scale, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
+      geom_bar(stat = "identity", colour=bydate$Seasons) +
+      {if ("Temp" %in% input$dist)geom_line(aes(y = mean_temp ), colour = "red", size = 0.5)}+
+      {if ("Hum" %in% input$dist)geom_line(aes(y = mean_Humidity ), colour = "blue", size = 0.5)}+
+      {if ("Wind" %in% input$dist)geom_line(aes(y = mean_Wind ), colour = "green", size = 0.5)}+
+      {if ("Sol" %in% input$dist)geom_line(aes(y = Solar.Radiation_mean ), colour = "yellow", size = 0.5)}+
+      {if ("Dew" %in% input$dist)geom_line(aes(y = Dew.point_mean), colour = "cyan", size = 0.5)}+
+  theme_minimal()
+  })
+  }
+
+shinyApp(ui, server)
+
+```{r}
+install.packages("caret")
+library(caret)
+process <- preProcess(as.data.frame(bydate), method=c("range"))
+
+norm_scale <- predict(process, as.data.frame(bydate))
+```
+
 
 ```{r}
 #Dashboard for Hours
@@ -278,7 +617,9 @@ server <- function(input, output) {
     if (input$season_select == "Alle") {
       byhour<- data %>% group_by(Hour)%>%summarise(Seasons = first(Seasons),Summe_Rented_Bike_Count = sum(Rented.Bike.Count), mean_temp=mean(Temperature..C.),cor_temp=cor(Rented.Bike.Count,Temperature..C.), mean_Humidity=mean(Humidity...,na.rm = TRUE),cor_Humidity=cor(Rented.Bike.Count,Humidity...) ,mean_Wind=mean(Wind.speed..m.s.),cor_Wind=cor(Rented.Bike.Count,Wind.speed..m.s.) , 
 Visibility_mean=mean(Visibility..10m.,na.rm =  TRUE),cor_Visibility=cor(Rented.Bike.Count,Visibility..10m.),
-Dew.point_mean=mean(Dew.point.temperature..C.),cor_Dewpoint=cor(Rented.Bike.Count, Dew.point.temperature..C.),Solar.Radiation_mean=mean(Solar.Radiation..MJ.m2.), cor_Solar=cor(Rented.Bike.Count,Solar.Radiation..MJ.m2.)) # ungefilterte Daten
+Dew.point_mean=mean(Dew.point.temperature..C.),cor_Dewpoint=cor(Rented.Bike.Count, Dew.point.temperature..C.),Solar.Radiation_mean=mean(Solar.Radiation..MJ.m2.), cor_Solar=cor(Rented.Bike.Count,Solar.Radiation..MJ.m2.))%>%ungroup() # ungefilterte Daten
+      byhour$Seasons <- replace(byhour$Seasons, TRUE, "Alle")
+    return(byhour)
     } else {
       byhour<-data %>% group_by(Hour)%>%filter(Seasons == input$season_select)%>%summarise(Seasons = first(Seasons),Summe_Rented_Bike_Count = sum(Rented.Bike.Count), mean_temp=mean(Temperature..C.),cor_temp=cor(Rented.Bike.Count,Temperature..C.), mean_Humidity=mean(Humidity...,na.rm = TRUE),cor_Humidity=cor(Rented.Bike.Count,Humidity...) ,mean_Wind=mean(Wind.speed..m.s.),cor_Wind=cor(Rented.Bike.Count,Wind.speed..m.s.) , 
 Visibility_mean=mean(Visibility..10m.,na.rm =  TRUE),cor_Visibility=cor(Rented.Bike.Count,Visibility..10m.),
@@ -289,51 +630,55 @@ Dew.point_mean=mean(Dew.point.temperature..C.),cor_Dewpoint=cor(Rented.Bike.Coun
 
   # Jetzt funktionieren die renderPlot-Ausgaben
   output$plot1 <- renderPlot({
-    bydate <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_temp)) +
+    byhour <- gefilterte_daten()
+    ggplot(byhour, aes(x = Summe_Rented_Bike_Count, y = mean_temp,colour=Seasons)) +
       geom_point() +
-      geom_smooth(method = lm, formula = y ~ x, colour = "red")
+      geom_smooth(method = lm, formula = y ~ x, colour = "red")+
+      labs(
+        title="By season"
+        
+      )
   })
 
   output$plot2 <- renderPlot({
-    bydate <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity)) +
+    byhour <- gefilterte_daten()
+    ggplot(byhour, aes(x = Summe_Rented_Bike_Count, y = mean_Humidity,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
   })
 
   output$plot3 <- renderPlot({
-    bydate <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = mean_Wind)) +
+    byhour <- gefilterte_daten()
+    ggplot(byhour, aes(x = Summe_Rented_Bike_Count, y = mean_Wind,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
   })
 
   output$plot4 <- renderPlot({
-    bydate <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean)) +
+    byhour <- gefilterte_daten()
+    ggplot(byhour, aes(x = Summe_Rented_Bike_Count, y = Visibility_mean,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
   })
 
   output$plot5 <- renderPlot({
-    bydate <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean)) +
+    byhour <- gefilterte_daten()
+    ggplot(byhour, aes(x = Summe_Rented_Bike_Count, y = Dew.point_mean,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
   })
 
   output$plot6 <- renderPlot({
-    bydate <- gefilterte_daten()
-    ggplot(bydate, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean)) +
+    byhour <- gefilterte_daten()
+    ggplot(byhour, aes(x = Summe_Rented_Bike_Count, y = Solar.Radiation_mean,colour=Seasons)) +
       geom_point() +
       geom_smooth(method = lm, formula = y ~ x, colour = "red")
   })
 
   output$plot7 <- renderPlot({
-    bydate <- gefilterte_daten()
-    scale_factor <- max(bydate$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
-    ggplot(bydate, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
+    byhour <- gefilterte_daten()
+    scale_factor <- max(byhour$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
+    ggplot(byhour, aes(x = Dates, y = Summe_Rented_Bike_Count)) +
       geom_bar(stat = "identity") +
       geom_line(aes(y = mean_temp * scale_factor), colour = "red", size = 1) +
       scale_y_continuous(
