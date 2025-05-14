@@ -32,6 +32,13 @@ Correlations<-data.frame(
 )
 print(Correlations)
 ```
+```{r}
+#install.packages("caret")
+library(caret)
+process <- preProcess(as.data.frame(bydate), method=c("range"))
+
+norm_scale <- predict(process, as.data.frame(bydate))
+```
 Die beiden stärksten Korrelationen im Datensatz sind Hour(Uhrzeit) mit 0.41 und Temperatur mit 0.53 was in beiden fällen auf eine mittelstarke Korrelation hindeutet. Es lässt sich dadurch Annehmen, das z.B. an Tagen an denen eine höhere Temparatur herrscht mit mehr Kunden zu rechnen ist.
 
 ```{r}
@@ -132,7 +139,7 @@ scale_factor <- max(bydate$Summe_Rented_Bike_Count, na.rm = TRUE) / 50
 
 ggplot(bydate, mapping= aes(x=Dates, y=Summe_Rented_Bike_Count, colour=Seasons))+
          geom_bar(stat = "identity")+
-  geom_line(aes(y = mean_temp * scale_factor), colour = "red", size = 1) +
+  geom_line(aes(y = mean_temp * scale_factor), colour = "red", linewidth = 1) +
 
   # Sekundärachse (damit die Temperatur verständlich bleibt)
   scale_y_continuous(
@@ -195,11 +202,11 @@ ui <-dashboardPage(
   ),
   selectInput(
     inputId = "regressionlines",
-    label = "Wähle Regression:",
+    label = "Wähle Regression (nur für Plots):",
     choices = c("Alle","Einzelne Jahreszeiten"),
     selected = "Alle"
   ),
-  radioButtons("dist", "Distribution type:",
+  radioButtons("dist", "Distribution type (nur für normal_plots):",
                c("Temperature" = "Temp",
                  "Humidity-" = "Hum",
                  "Wind" = "Wind",
@@ -391,11 +398,11 @@ ui <-dashboardPage(
   ),
   selectInput(
     inputId = "regressionlines",
-    label = "Wähle Regression:",
+    label = "Wähle Regression (nur für Plots):",
     choices = c("Alle","Einzelne Jahreszeiten"),
     selected = "Alle"
   ),
-  checkboxGroupInput("dist", "Distribution type:",
+  checkboxGroupInput("dist", "Distribution type(nur für normal_plots):",
                c("Temperature" = "Temp",
                  "Humidity-" = "Hum",
                  "Wind" = "Wind",
@@ -567,14 +574,11 @@ server <- function(input, output) {
   }
 
 shinyApp(ui, server)
-
-```{r}
-install.packages("caret")
-library(caret)
-process <- preProcess(as.data.frame(bydate), method=c("range"))
-
-norm_scale <- predict(process, as.data.frame(bydate))
 ```
+
+
+
+
 
 
 ```{r}
