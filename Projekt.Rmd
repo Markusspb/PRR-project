@@ -61,7 +61,7 @@ bydate <- data %>%
     Solar_Radiation_mean = mean(SolarRadiation),
     cor_Solar = cor(RentedBikeCount, SolarRadiation)
   )
-bydate<-iconv(bydate, from = "latin1", to = "UTF-8")
+
 ```
 
 ```{r bydate}
@@ -69,12 +69,16 @@ print(bydate)
 ```
 
 ```{r caret and standardistuion}
-#install.packages("caret")
-library(caret)
-process <- preProcess(as.data.frame(bydate), method=c("range"))
+#install.packages("recipes")
+library(recipes)
 
-norm_scale <- predict(process, as.data.frame(bydate))
+rec <- recipe(~ ., data = as.data.frame(bydate)) %>%
+  step_range(all_numeric(), min = 0, max = 1) %>%
+  prep()
+
+norm_scale <- bake(rec, new_data = NULL)
 ```
+
 Die beiden starksten Korrelationen im Datensatz sind Hour(Uhrzeit) mit 0.41 und Temperatur mit 0.53 was in beiden fallen auf eine mittelstarke Korrelation hindeutet. Es lasst sich dadurch Annehmen, das z.B. an Tagen an denen eine höhere Temparatur herrscht mit mehr Kunden zu rechnen ist.
 
 ```{r}
@@ -214,6 +218,7 @@ ggplot(byhour, mapping= aes(x=RentedBikeCount_sum, y=Solar.Radiation_mean))+
 
 
 ```
+
 ```{r Shiny1}
 # next step normalization of multiple variables; done and ordered with chekboxes
 #bydate
