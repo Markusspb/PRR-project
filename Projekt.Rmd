@@ -737,56 +737,91 @@ shinyApp(ui, server)
 ```
 
 ```{r}
-shinyApp(ui, server)
+library(shiny)
+library(shinydashboard)
+library(tidyverse)
  
-# Zusatzliche Visualisierungen mit ggplot2
- 
-# 1. Bubble Plot: Temperatur vs. Ausleihzahl, Luftfeuchtigkeit als Punktgröße, farbig nach Jahreszeit
-ggplot(data, aes(
-  x = Temperature_C,
-  y = RentedBikeCount,
-  color = Seasons,
-  size = Humidity
-)) +
-  geom_point(alpha = 0.6) +
-  labs(
-    title = "Einfluss von Temperatur & Luftfeuchtigkeit auf Fahrradverleih",
-    x = "Temperatur (C)",
-    y = "Rented Bike Count",
-    size = "Luftfeuchtigkeit (%)",
-    color = "Jahreszeit"
-  ) +
-  theme_minimal()
- 
-# 2. Facet-Wrap: Temperatur vs. Ausleihzahl, nach Feiertag und Jahreszeit
-ggplot(data, aes(x = Temperature_C, y = RentedBikeCount)) +
-  geom_point(aes(color = Humidity), alpha = 0.5) +
-  scale_color_viridis_c() +
-  facet_grid(Holiday ~ Seasons) +
-  labs(
-    title = "Fahrradverleih nach Temperatur, Luftfeuchtigkeit, Jahreszeit & Feiertag",
-    x = "Temperatur (C)",
-    y = "Rented Bike Count",
-    color = "Luftfeuchtigkeit (%)"
-  ) +
-  theme_minimal()
- 
-# 3. Kachel-Diagramm (Heatmap-Ersatz): mittlere Ausleihzahlen pro Stunde & Temperaturklasse
-data$TempGroup <- cut(data$Temperature_C, breaks = seq(-15, 40, by = 5))
+# Temperatur-Kategorien vorbereiten (für Heatmap)
+data$TempGroup <- cut(data$Temperature..C., breaks = seq(-15, 40, by = 5))
  
 heatmap_data <- data %>%
   group_by(Hour, TempGroup) %>%
-  summarise(AvgRented = mean(RentedBikeCount), .groups = "drop")
+  summarise(AvgRented = mean(Rented.Bike.Count), .groups = "drop")
  
-ggplot(heatmap_data, aes(x = Hour, y = TempGroup, fill = AvgRented)) +
-  geom_tile(color = "white") +
-  scale_fill_viridis_c() +
-  labs(
-    title = "Durchschnittliche Ausleihzahlen nach Stunde & Temperatur",
-    x = "Stunde",
-    y = "Temperaturgruppe (C)",
-    fill = "Ø Ausleihen"
-  ) +
-  theme_minimal()
+# UI -----------------------------------------------------
+ui <- dashboardPage(
+  dashboardHeader(title = "Weitere Analysen"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("Weitere Plots", tabName = "extras", icon = icon("chart-area"))
+    )
+  ),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "extras",
+        fluidRow(
+          box(title = "Bubble Plot: Temp & Humidity", plotOutput("bubble_plot", height = 300), width = 12),
+          box(title = "Facet Plot: Feiertage & Jahreszeit", plotOutput("facet_plot", height = 300), width = 12),
+          box(title = "Heatmap: Temp & Stunde", plotOutput("heatmap_plot", height = 300), width = 12)
+        )
+      )
+    )
+  )
+)
+ 
+# Server -----------------------------------------------------
+server <- function(input, output) {
+  # 1. Bubble Plot
+  output$bubble_plot <- renderPlot({
+    ggplot(data, aes(
+      x = Temperature..C.,
+      y = Rented.Bike.Count,
+      color = Seasons,
+      size = Humidity...
+    )) +
+      geom_point(alpha = 0.6) +
+      labs(
+        title = "Einfluss von Temperatur & Luftfeuchtigkeit auf Fahrradverleih",
+        x = "Temperatur (°C)",
+        y = "Rented Bike Count",
+        size = "Luftfeuchtigkeit (%)",
+        color = "Jahreszeit"
+      ) +
+      theme_minimal()
+  })
+ 
+  # 2. Facet Plot
+  output$facet_plot <- renderPlot({
+    ggplot(data, aes(x = Temperature..C., y = Rented.Bike.Count)) +
+      geom_point(aes(color = Humidity...), alpha = 0.5) +
+      scale_color_viridis_c() +
+      facet_grid(Holiday ~ Seasons) +
+      labs(
+        title = "Fahrradverleih nach Temperatur, Luftfeuchtigkeit, Jahreszeit & Feiertag",
+        x = "Temperatur (°C)",
+        y = "Rented Bike Count",
+        color = "Luftfeuchtigkeit (%)"
+      ) +
+      theme_minimal()
+  })
+ 
+  # 3. Heatmap
+  output$heatmap_plot <- renderPlot({
+    ggplot(heatmap_data, aes(x = Hour, y = TempGroup, fill = AvgRented)) +
+      geom_tile(color = "white") +
+      scale_fill_viridis_c() +
+      labs(
+        title = "Durchschnittliche Ausleihzahlen nach Stunde & Temperatur",
+        x = "Stunde",
+        y = "Temperaturgruppe (°C)",
+        fill = "Ø Ausleihen"
+      ) +
+      theme_minimal()
+  })
+}
+ 
+# Run the app
+shinyApp(ui, server)
 ```
+
 
